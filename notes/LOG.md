@@ -67,3 +67,12 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - SIGNER FORM: embedded as a 287,204-char string literal starting `var _0x5ae8=['doeZk',...]` = classic javascript-obfuscator string array (NOT a bytecode VM). Primitives: MD5, atob(base64), unescape, charCodeAt/fromCharCode. => My A3 string-array pass should apply here (it had no target on TikTok).
 - KEY COMPARATIVE FINDING (Part C): TikTok = bytecode VM; XHS = string-array/CFG JS obfuscation. 
 - vendor-dynamic sha256 25e31f6b... pinned. Wrote analysis/xhs/B1_recon.md.
+
+## 2026-11-13: B2-B5, Xiaohongshu harness/deobf/algorithm/vectors
+
+- Extracted embedded signer payload (288347 chars) from vendor-dynamic via tools/deobf/extract_xhs_payload.js -> samples/xhs/signer_payload.js (eval'd in bundle).
+- B3 deobf: built reusable tools/deobf/passes/string-array-eval.js (javascript-obfuscator decoder: structural decoder detection, transitive alias resolution [40 aliases], sandbox-eval prelude, replace literal-arg calls). 297 calls resolved. 2 tests pass (6 deobf tests total). Decoder=_0xc8b2 aliased _0xe762c0. Remaining layers: variable-index decoder calls, control-flow flattening, encrypted hex blobs __$c/__bc (data-driven mini-interpreter).
+- B2 harness (tools/harness/run_xhs.js, make xhs): payload loads, defines signer glb["_AUuXfEG27Xa3x"](a,b,c) + ~20 hash-named helpers. Fingerprint reads before abort: document.cookie, document.documentElement.getAttribute (automation/tamper check), document.addEventListener -> data/xhs_fingerprint_surface.json.
+- B5: signer _AUuXfEG27Xa3x throws env-integrity error "err:d93135" headless (reads documentElement.getAttribute first). NO valid x-s vectors produced. Did NOT defeat the check (approaches building a signer; keep out of public repo). data/test_vectors/xhs.json documents inputs + the reachable partial helper output [0,"<url>1013904243"] (NOT a signature) + pass_rate N/A. Honest per rule 5.
+- B4 algorithm (static+partial): contract window.sign(url,body)->{x-s,x-t,x-s-common}; to-be-signed string = url + LCG const 1013904243; primitives MD5 (referenced, magic consts NOT plaintext -> in __$c/__bc or computed), base64(atob) confirmed, unescape/fromCharCode. RC4/custom-alphabet (older public claim) NOT independently confirmed on this 2026 bundle. analysis/xhs/B2_B3_B4_analysis.md.
+- COMPARATIVE (Part C seed): TikTok=bytecode VM; XHS=js-obfuscator string-array + CFG flattening + encrypted data blob. Both block headless signing via env checks. Shared LCG constant ~1013904223/43.

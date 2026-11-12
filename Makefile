@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 .PHONY: reproduce verify-samples deobf disasm trace figures paper test clean
 
-reproduce: verify-samples deobf disasm trace figures
+reproduce: verify-samples deobf disasm trace xhs figures
 
 # Check every pinned bundle in samples/ against data/bundles.csv (columns: platform,filename,url,sha256,date_captured).
 verify-samples:
@@ -34,8 +34,15 @@ figures:
 paper:
 	cd paper && latexmk -pdf main.tex
 
+# Xiaohongshu: extract the embedded signer payload, deobfuscate it, and run the harness.
+xhs:
+	NODE_PATH=tools/deobf/node_modules node tools/deobf/extract_xhs_payload.js samples/xhs/vendor-dynamic.bb0b0051.js samples/xhs/signer_payload.js
+	NODE_PATH=tools/deobf/node_modules node tools/deobf/run_eval.js samples/xhs/signer_payload.js samples/xhs/signer_payload.deobf.js
+	NODE_PATH=tools/deobf/node_modules node tools/harness/run_xhs.js
+
 test:
-	@echo "tests: none yet"
+	cd tools/deobf && node --test
+	cd tools/vm && node --test
 
 clean:
 	cd paper && latexmk -C || true

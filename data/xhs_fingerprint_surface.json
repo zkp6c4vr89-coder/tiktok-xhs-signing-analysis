@@ -1,0 +1,22 @@
+[
+  {
+    "path": "document",
+    "n": 1
+  },
+  {
+    "path": "document.addEventListener",
+    "n": 1
+  },
+  {
+    "path": "document.cookie",
+    "n": 1
+  },
+  {
+    "path": "document.documentElement",
+    "n": 1
+  },
+  {
+    "path": "document.documentElement.getAttribute",
+    "n": 1
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "url": "/api/sns/web/v1/feed?source=explore",
+  "body": {
+    "source_note_id": "000000000000000000000000",
+    "image_formats": [
+      "jpg",
+      "webp"
+    ]
+  },
+  "fixedNow": 1700000000000,
+  "signer": "_9e859446229841aa1dd905da00d2145f",
+  "output": [
+    0,
+    "/api/sns/web/v1/feed?source=explore1013904243"
+  ]
+}
