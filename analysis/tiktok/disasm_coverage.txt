@@ -1,0 +1,2 @@
+functions: 351 | returned cleanly: 245 | desynced: 106 | bytes covered: 88772/98961 (89.7%)
+wrote 351 function disassemblies to /private/tmp/claude-501/-Users-nandhu-Documents-UNIVERSITY-Self-Learning-Reverse-Engineer-/33cda600-972c-4d2a-a013-378ab27afe14/scratchpad/disasm_out/

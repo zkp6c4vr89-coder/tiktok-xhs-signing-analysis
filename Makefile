@@ -19,8 +19,10 @@ deobf:
 	cd tools/deobf && node --test
 	node tools/deobf/run.js samples/webmssdk.1.0.0.417.js
 
+# Decode the bytecode, build the opcode table, and run recursive-descent disassembly.
 disasm:
-	@echo "disasm: not implemented yet (phase A4)"
+	cd tools/vm && node --test
+	NODE_PATH=tools/deobf/node_modules node tools/vm/pipeline.js
 
 trace:
 	@echo "trace: not implemented yet (phase A5)"

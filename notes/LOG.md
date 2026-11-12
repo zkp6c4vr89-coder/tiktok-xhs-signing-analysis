@@ -35,3 +35,16 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - Strings live in (1) the ~69KB encoded bytecode blob at line 1 (decoded at runtime by the VM's decodestring; recovered in A4, not by an AST pass) and (2) small encoded constants (a 260-char base64 -> repeating-key XOR blob, key "CsArachoi" leaks via null runs; binary, not the main store).
 - Running the pass on 1.16.6: {arrayName:"a",decoder:null,replacedArrayIndex:1} => no JS-level string-array layer. 
 - FINDING: the JS-level string-array layer the reference removed (Kg/aa) is ABSENT in 1.16.6 — version drift changed the obfuscation surface. Technique reproduced; not applicable to this version. Documented in analysis/tiktok/A3_string_deobfuscation.md. Will retry the pass on XHS in B3.
+
+## 2026-11-12: A4, VM reconstruction
+
+- Found the VM core at dispatch `d[f](u)` (beautified line 7754). 1.16.6 VM is architecturally DIFFERENT from reference 1.12.2:
+  - register machine (register file u.o), 16-bit opcodes, handler-table dispatch d[f] (not a switch on 1-byte opcodes / stack machine).
+  - bytecode = base64 -> raw DEFLATE (zlib.inflateRaw), 98961 bytes. Decoded via tools/vm/decode.js (reference had skipped decompression by hardcoding bytes). bytecode sha256 542a2a47...
+  - operand readers O=1B, p=2B(uint16), m=3B(uint24); register access C/L get, Q/I set, U postinc, P box. return = write register 4 (sentinel w). strings: l(n,t)=base64+repeating-XOR pool A; numbers pool y.
+- Built tools/vm: build_opcode_table.js (AST-based operand/variadic/terminal/setsPC classification), disasm.js (linear + recursive-descent w/ coverage), pipeline.js (end-to-end). 3 vm tests pass. Wired `make disasm`.
+- COUNTS: opcodes = 365 (ref 77; ref disasm actually 66). functions discovered = 351 (206 constant S() seed entries + operand-driven children), 245 return cleanly, 106 desync. coverage 88772/98961 = 89.7%.
+  - 99 opcodes are terminal (inline a whole function) => specialised/superinstruction VM explains 365 vs 77. operand counts up to 10x uint16 (fused expressions).
+- desyncs (106) = disasm doesn't follow the 33 in-function jump (setsPC) opcodes yet. Honest limitation; not needed for A5 data-flow tracing.
+- PRIMITIVE LEADS from numeric pool y: 0x9E3779B9 (TEA), 538969122 (strData magic), 16777619/2166136260 (FNV-1), 1013904223 (LCG), SHA-256 round constants K[], + MD5 (from ref). Confirm in A5.
+- Wrote analysis/tiktok/A4_vm.md. Committed opcode table + function entries to data/, 3 sample disasms + coverage summary to analysis/tiktok/.
