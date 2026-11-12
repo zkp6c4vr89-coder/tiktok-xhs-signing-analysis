@@ -50,3 +50,7 @@ To be filled in at checkpoints A6, B5, and C.
 ## Licence
 
 Code is under the MIT licence ([LICENSE](LICENSE)). The paper and its figures are under CC BY 4.0 ([paper/LICENSE](paper/LICENSE)).
+
+## Contact
+
+Sreenandhu Nair, GitHub [@zkp6c4vr89-coder](https://github.com/zkp6c4vr89-coder). Please open an issue for questions or corrections.
