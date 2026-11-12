@@ -1,2 +1,6 @@
 platform,filename,url,sha256,date_captured
 tiktok,webmssdk.1.0.0.417.js,https://sf16-website-login.neutral.ttwstatic.com/obj/tiktok_web_login_static/webmssdk/1.0.0.417/webmssdk.js,6625c4fd90012eb2b6166002b278ac99ba2a2495325590f8eda9071544a814c8,2026-11-12
+xhs,xhs/bundler-runtime.d4ee415f.js,https://fe-platform-s10.rednotecdn.com/formula-static/xhs-pc-web/public/resource/js/bundler-runtime.d4ee415f.js,130085422b983f787ce0a46701ce0b49949272270796fa194191201bf66ccd86,2026-11-12
+xhs,xhs/index.b286af71.js,https://fe-platform-s10.rednotecdn.com/formula-static/xhs-pc-web/public/resource/js/index.b286af71.js,a2342795972ed1d7618c01445305d1039cf904817e595a1400aac7eb5a301da7,2026-11-12
+xhs,xhs/vendor-dynamic.bb0b0051.js,https://fe-platform-s10.rednotecdn.com/formula-static/xhs-pc-web/public/resource/js/vendor-dynamic.bb0b0051.js,25e31f6bac526ff888fe06fbc72b8e43e93b0bd43444e3858d2a7c055a286c37,2026-11-12
+xhs,xhs/vendor.c8b22024.js,https://fe-platform-s10.rednotecdn.com/formula-static/xhs-pc-web/public/resource/js/vendor.c8b22024.js,c5e6ea2f3f5023951b85677136d1a1880339063c1052f79c2e67157e413cd58e,2026-11-12

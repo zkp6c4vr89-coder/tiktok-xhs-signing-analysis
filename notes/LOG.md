@@ -58,3 +58,12 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - strData: NOT located as a pooled string in 1.16.6 (magic 538969122 IS in pool y). Unverified.
 - Primitives (pool y + MD5): MD5, SHA-256 (round consts K), FNV-1 (16777619/2166136260), LCG (1013904223), TEA (0x9E3779B9), envelope magic 538969122. Exact composition NOT traced end-to-end (no headless signature) — honest limitation.
 - Wrote analysis/tiktok/A5_tracing.md and the A6 claim table analysis/tiktok/REPLICATION.md (5 reproduced, 5 reproduced-different, 1 technique-only, 1 unverified). PART A checkpoint.
+
+## 2026-11-12: B1, Xiaohongshu x-s recon
+
+- xiaohongshu.com -> 302 rednote.com (rebrand) -> login wall, but serves public PC-web bundles at fe-platform-s10.rednotecdn.com/formula-static/xhs-pc-web/.../js/. Captured & pinned 4 bundles (bundler-runtime, index, vendor, vendor-dynamic). 
+- /as/v1/ anti-spam modules 403 without referer. Did NOT spoof headers (bot-check circumvention; classifier-blocked and correct to avoid). Unnecessary: signer is in vendor-dynamic.
+- CONTRACT (from axios interceptor in vendor-dynamic): l=window.sign(u,e.data); u=buildURL(uri,query); merged into headers via Object.assign -> x-s/x-t/x-s-common. _webmsxyw = newer signer ("sign_new" vs "sign_old"); window.f() adds device headers. Inputs: url, body, a1 cookie (+webId/gid/b1/p1), timestamp (Date.now). 
+- SIGNER FORM: embedded as a 287,204-char string literal starting `var _0x5ae8=['doeZk',...]` = classic javascript-obfuscator string array (NOT a bytecode VM). Primitives: MD5, atob(base64), unescape, charCodeAt/fromCharCode. => My A3 string-array pass should apply here (it had no target on TikTok).
+- KEY COMPARATIVE FINDING (Part C): TikTok = bytecode VM; XHS = string-array/CFG JS obfuscation. 
+- vendor-dynamic sha256 25e31f6b... pinned. Wrote analysis/xhs/B1_recon.md.
