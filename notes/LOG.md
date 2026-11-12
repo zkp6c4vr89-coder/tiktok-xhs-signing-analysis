@@ -18,3 +18,12 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
   2. Function count 272 (vm0..vm271) confirmed by directory listing.
   3. Primitive leads: aa[45]=2654435769=0x9E3779B9 (golden-ratio constant, TEA/XXTEA family); vm103 contains "d41d8cd98f00b204e9800998ecf8427e" = MD5(""), so X-Bogus path likely uses MD5.
 - Naming: author's array identifiers are slurs; redacted to ARR_STR (Kg[...]) / ARR_NUM (aa[...]) throughout. Will never appear in the public repo.
+
+## 2026-11-12: A2, capture and pin the bundle
+
+- Reference pinned no hash/URL; it pasted deobfuscated source. Extracted the version it analysed from that paste: webmssdk core dr="1.12.2" (slardar __version__ 2.11.0).
+- Discovery: logged-out `curl` GET of https://www.tiktok.com/ and /explore -> both reference one SDK: .../webmssdk/1.0.0.417/webmssdk.js. (2 static GETs, generic UA, no cookies.)
+- Captured to samples/webmssdk.1.0.0.417.js. SHA-256 6625c4fd90012eb2b6166002b278ac99ba2a2495325590f8eda9071544a814c8, 243702 bytes. Internal core version in THIS file: dr="1.16.6".
+- FINDING (version drift): reference core 1.12.2 vs current 1.16.6 (4 minor versions). Documented in analysis/tiktok/bundle_capture.md. Replication targets our pinned 1.16.6; reference's 1.12.2 survives as pasted source for cross-version comparison.
+- Pinned in data/bundles.csv; `make verify-samples` -> OK. Confirmed samples/*.js is git-ignored (git check-ignore hit; git status shows only bundles.csv + notes staged).
+- Sanity: msToken/mssdk plaintext present; X-Bogus/X-Gnarly absent as plaintext (encoded in string array, as expected).
