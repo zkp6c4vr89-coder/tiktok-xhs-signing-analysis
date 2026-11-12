@@ -1,0 +1,118 @@
+[
+  {
+    "path": "document.addEventListener",
+    "n": 32
+  },
+  {
+    "path": "__SLARDAR_REGISTRY__",
+    "n": 10
+  },
+  {
+    "path": "__SLARDAR_REGISTRY__.Slardar.plugins",
+    "n": 9
+  },
+  {
+    "path": "__SLARDAR_REGISTRY__.Slardar",
+    "n": 5
+  },
+  {
+    "path": "addEventListener",
+    "n": 4
+  },
+  {
+    "path": "__SLARDAR_REGISTRY__.Slardar.plugins.filter",
+    "n": 3
+  },
+  {
+    "path": "__SLARDAR_REGISTRY__.Slardar.plugins.push",
+    "n": 3
+  },
+  {
+    "path": "navigator",
+    "n": 2
+  },
+  {
+    "path": "JS_MD5_NO_NODE_JS",
+    "n": 2
+  },
+  {
+    "path": "document.readyState",
+    "n": 2
+  },
+  {
+    "path": "__SLARDAR_REGISTRY__.Slardar.errors",
+    "n": 2
+  },
+  {
+    "path": "navigator.connection",
+    "n": 2
+  },
+  {
+    "path": "navigator.mozConnection",
+    "n": 2
+  },
+  {
+    "path": "navigator.webkitConnection",
+    "n": 2
+  },
+  {
+    "path": "document",
+    "n": 1
+  },
+  {
+    "path": "screen",
+    "n": 1
+  },
+  {
+    "path": "location",
+    "n": 1
+  },
+  {
+    "path": "localStorage",
+    "n": 1
+  },
+  {
+    "path": "sessionStorage",
+    "n": 1
+  },
+  {
+    "path": "history",
+    "n": 1
+  },
+  {
+    "path": "performance",
+    "n": 1
+  },
+  {
+    "path": "crypto",
+    "n": 1
+  },
+  {
+    "path": "JS_MD5_NO_WINDOW",
+    "n": 1
+  },
+  {
+    "path": "JS_MD5_NO_COMMON_JS",
+    "n": 1
+  },
+  {
+    "path": "JS_MD5_NO_ARRAY_BUFFER",
+    "n": 1
+  },
+  {
+    "path": "JS_MD5_NO_ARRAY_BUFFER_IS_VIEW",
+    "n": 1
+  },
+  {
+    "path": "__SLARDAR_REGISTRY__.Slardar.subject",
+    "n": 1
+  },
+  {
+    "path": "__SLARDAR_DEVTOOLS_GLOBAL_HOOK__",
+    "n": 1
+  },
+  {
+    "path": "navigator.userAgent",
+    "n": 1
+  }
+]

@@ -48,3 +48,13 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - desyncs (106) = disasm doesn't follow the 33 in-function jump (setsPC) opcodes yet. Honest limitation; not needed for A5 data-flow tracing.
 - PRIMITIVE LEADS from numeric pool y: 0x9E3779B9 (TEA), 538969122 (strData magic), 16777619/2166136260 (FNV-1), 1013904223 (LCG), SHA-256 round constants K[], + MD5 (from ref). Confirm in A5.
 - Wrote analysis/tiktok/A4_vm.md. Committed opcode table + function entries to data/, 3 sample disasms + coverage summary to analysis/tiktok/.
+
+## 2026-11-12: A5 + A6, tracing and replication table
+
+- Built reusable harness: tools/harness/env.js (logging-Proxy browser shim, synthetic/deterministic, no net/no real data) + run_tiktok.js (injects hooks on decoder l(n,t) and dispatch d[f](u), runs bundle in node:vm). `make trace`.
+- Run: 8884 dispatches / 89 opcodes before headless boot stops (missing browser APIs; no signature produced). Decoder hook recovered correct strings (base62 alphabet, Math/imul/TextEncoder...) -> confirms base64+XOR model. Fingerprint surface (bootstrap subset, 29 paths) -> data/tiktok_fingerprint_surface.json. JS_MD5_NO_NODE_JS seen => MD5 lib present.
+- Token recovery (tools/vm/strings.js): brute-decode pool A keeping EXACT matches -> A[685]=msToken, A[686]=X-Bogus, A[688]=X-Gnarly, A[753]=X-MS-STUB, A[754]=X-MS-PAYLOAD, A[1032]=/web/report.
+- Token->function via disasm operand scan -> data/tiktok_token_map_1.16.6.json: X-Bogus fn@70647/71583/72103/72253, X-Gnarly fn@73223, all headers assembled at fn@61636. (Reference: single vm103/vm249 — structure differs by version.)
+- strData: NOT located as a pooled string in 1.16.6 (magic 538969122 IS in pool y). Unverified.
+- Primitives (pool y + MD5): MD5, SHA-256 (round consts K), FNV-1 (16777619/2166136260), LCG (1013904223), TEA (0x9E3779B9), envelope magic 538969122. Exact composition NOT traced end-to-end (no headless signature) — honest limitation.
+- Wrote analysis/tiktok/A5_tracing.md and the A6 claim table analysis/tiktok/REPLICATION.md (5 reproduced, 5 reproduced-different, 1 technique-only, 1 unverified). PART A checkpoint.

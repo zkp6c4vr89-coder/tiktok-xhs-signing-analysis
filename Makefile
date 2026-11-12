@@ -24,8 +24,9 @@ disasm:
 	cd tools/vm && node --test
 	NODE_PATH=tools/deobf/node_modules node tools/vm/pipeline.js
 
+# Runtime trace in the Node harness (logging browser shim + VM hooks).
 trace:
-	@echo "trace: not implemented yet (phase A5)"
+	NODE_PATH=tools/deobf/node_modules node tools/harness/run_tiktok.js
 
 figures:
 	@echo "figures: not implemented yet"
