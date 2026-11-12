@@ -14,8 +14,10 @@ verify-samples:
 	  echo "OK       samples/$$file"; \
 	done
 
+# Run the deobfuscation pass tests, then apply the string-array pass to the pinned bundle.
 deobf:
-	@echo "deobf: not implemented yet (phase A3)"
+	cd tools/deobf && node --test
+	node tools/deobf/run.js samples/webmssdk.1.0.0.417.js
 
 disasm:
 	@echo "disasm: not implemented yet (phase A4)"

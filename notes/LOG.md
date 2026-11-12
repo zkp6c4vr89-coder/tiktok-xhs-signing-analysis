@@ -27,3 +27,11 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - FINDING (version drift): reference core 1.12.2 vs current 1.16.6 (4 minor versions). Documented in analysis/tiktok/bundle_capture.md. Replication targets our pinned 1.16.6; reference's 1.12.2 survives as pasted source for cross-version comparison.
 - Pinned in data/bundles.csv; `make verify-samples` -> OK. Confirmed samples/*.js is git-ignored (git check-ignore hit; git status shows only bundles.csv + notes staged).
 - Sanity: msToken/mssdk plaintext present; X-Bogus/X-Gnarly absent as plaintext (encoded in string array, as expected).
+
+## 2026-11-12: A3, string deobfuscation
+
+- Built reusable Babel pass tools/deobf/passes/string-array.js (auto-detect array + decoder+offset, optional sandboxed rotation, replaces ARR[n] and dec(n)). 4 unit tests pass (direct, decoder+offset, rotation, no-op). Wired `make deobf`.
+- Inspected the 1.16.6 bundle structure (scratchpad scripts): no all-string array >=40 elems; .shift() x1, parseInt( x0, atob( x1 => NO classic rotating string-array obfuscator.
+- Strings live in (1) the ~69KB encoded bytecode blob at line 1 (decoded at runtime by the VM's decodestring; recovered in A4, not by an AST pass) and (2) small encoded constants (a 260-char base64 -> repeating-key XOR blob, key "CsArachoi" leaks via null runs; binary, not the main store).
+- Running the pass on 1.16.6: {arrayName:"a",decoder:null,replacedArrayIndex:1} => no JS-level string-array layer. 
+- FINDING: the JS-level string-array layer the reference removed (Kg/aa) is ABSENT in 1.16.6 — version drift changed the obfuscation surface. Technique reproduced; not applicable to this version. Documented in analysis/tiktok/A3_string_deobfuscation.md. Will retry the pass on XHS in B3.
