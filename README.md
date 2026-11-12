@@ -45,7 +45,25 @@ make reproduce
 
 ## Results
 
-To be filled in at checkpoints A6, B5, and C.
+### Part A — TikTok replication (complete)
+
+The reference analysed webmssdk **1.12.2**; we pinned the current **1.16.6**. The
+method reproduces, but the protected artefact was re-engineered between versions.
+
+| Property | Reference 1.12.2 | Ours 1.16.6 |
+|---|---|---|
+| VM style | stack machine, `switch` | register machine, handler table `d[f]` |
+| Opcode width / count | 1-byte, 77 (66 in its disassembler) | 16-bit, **365** |
+| VM functions | 272 | **351 discovered** (89.7% byte coverage) |
+| Bytecode delivery | hard-coded array | base64 → raw DEFLATE (98,961 bytes) |
+| String hiding | JS-level array (Babel-removable) | in-VM base64 + XOR pool |
+| X-Bogus / X-Gnarly | vm103 / vm249 | fn@70647… / fn@73223 (assembled at fn@61636) |
+
+Claim-by-claim table: [analysis/tiktok/REPLICATION.md](analysis/tiktok/REPLICATION.md)
+(5 reproduced, 5 reproduced-different by version drift, 1 technique-only, 1 unverified).
+Reproduce with `make verify-samples && make deobf && make disasm && make trace`.
+
+### Parts B, C — to be filled in at checkpoints B5 and C.
 
 ## Licence
 
