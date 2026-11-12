@@ -1,0 +1,35 @@
+# --- Never commit: raw platform bundles, captures, and anything signer-like ---
+samples/
+private/
+
+# Captures / session material, wherever they land
+*.har
+*.har.json
+cookies*.txt
+cookies*.json
+*.cookie
+.env
+.env.*
+
+# Node / Python
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# LaTeX build artefacts (paper/main.pdf is committed deliberately at release)
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.toc
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
