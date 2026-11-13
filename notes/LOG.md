@@ -76,3 +76,10 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - B5: signer _AUuXfEG27Xa3x throws env-integrity error "err:d93135" headless (reads documentElement.getAttribute first). NO valid x-s vectors produced. Did NOT defeat the check (approaches building a signer; keep out of public repo). data/test_vectors/xhs.json documents inputs + the reachable partial helper output [0,"<url>1013904243"] (NOT a signature) + pass_rate N/A. Honest per rule 5.
 - B4 algorithm (static+partial): contract window.sign(url,body)->{x-s,x-t,x-s-common}; to-be-signed string = url + LCG const 1013904243; primitives MD5 (referenced, magic consts NOT plaintext -> in __$c/__bc or computed), base64(atob) confirmed, unescape/fromCharCode. RC4/custom-alphabet (older public claim) NOT independently confirmed on this 2026 bundle. analysis/xhs/B2_B3_B4_analysis.md.
 - COMPARATIVE (Part C seed): TikTok=bytecode VM; XHS=js-obfuscator string-array + CFG flattening + encrypted data blob. Both block headless signing via env checks. Shared LCG constant ~1013904223/43.
+
+## 2026-11-13: Part C, comparative analysis
+
+- Wrote analysis/COMPARISON.md. Dimensions: obfuscation taxonomy, VM-vs-flattened-JS, inputs bound, fingerprint surface, randomness/time, version drift, difficulty, lessons for defenders.
+- Decision (with owner): dropped B6 x-s-common/x-rap-param (same env-check wall, runtime-capped). Skipped XHS 2-version diff (no 2nd bundle pinned) -> XHS drift noted QUALITATIVELY only; TikTok drift QUANTIFIED (1.12.2 vs 1.16.6). Stated honestly in C6.
+- Carried confidence markers up: MD5 referenced (not byte-confirmed), base64 confirmed, RC4/custom-alphabet NOT confirmed on 2026 bundle. No invented hours (effort reported relatively, by tooling needed).
+- Key shared finding: LCG increment 1013904223 (TT) / 1013904243 (XHS); both bind url+body+id+time; both blocked headless by env-integrity checks (the real wall, not obfuscation).
