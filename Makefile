@@ -28,8 +28,10 @@ disasm:
 trace:
 	NODE_PATH=tools/deobf/node_modules node tools/harness/run_tiktok.js
 
+# Regenerate the paper's data-driven figures and the opcode table from committed data.
 figures:
-	@echo "figures: not implemented yet"
+	python3 paper/figures/make_figures.py
+	python3 paper/figures/make_opcode_table.py
 
 paper:
 	cd paper && latexmk -pdf main.tex

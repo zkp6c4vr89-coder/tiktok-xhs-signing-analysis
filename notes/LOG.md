@@ -91,3 +91,9 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - paper/main.tex: IEEEtran two-column, sections Abstract..Conclusion + appendices (bundles, opcode encoding, fingerprint surfaces, tool catalogue). Builds with latexmk -> main.pdf, 5 pages, 0 undefined refs/citations. Every number traces to repo (365/351/89.7%/pool indices etc.).
 - Hostile self-review -> notes/REVIEW.md (12 issues; fixed: primitive confidence markers, exact-vs-heuristic opcode count, single-bundle honesty, partial fingerprint labelling, relative effort; noted in Limitations: no signature produced, coverage 89.7%, strData unverified).
 - NOTE: paper is 5 dense IEEEtran pages, below the brief's 10-14 target. Chose not to pad (review item 10). Content is complete + evidence-backed. Can expand with more real detail if owner wants.
+
+## 2026-11-13: Part D addendum (worked example + full opcode appendix)
+
+- Added worked end-to-end trace to Section V: fn@61636 off 62053 bytes "01 20 02 ae 00 05..." -> op288 operand 0x02ae=686 -> A[686]="PVgnJSUPHg==" base64+XOR key A[5]="eueJBzmo" -> "X-Bogus". Fully reproducible via tools/vm.
+- Added full 365-opcode appendix: paper/figures/make_opcode_table.py -> paper/opcode_table.tex (longtable, 4-up, onecolumn). Wired `make figures`.
+- Paper now 8 pages, 0 undefined. Dropped the 10-14 page target per owner (short workshop-length is legitimate; no padding). Skipped expanded related-work and deep constant-pool analysis (latter risks upgrading "MD5 referenced" to "confirmed" — kept strict).

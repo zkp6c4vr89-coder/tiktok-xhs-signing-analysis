@@ -9,6 +9,7 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage{longtable}
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible}
 
@@ -147,6 +148,12 @@ write \code{u.o[4]} & function return \\
 \end{figure}
 
 \textbf{Tracing.} Under the harness, the bootstrap executes 8{,}884 VM dispatches across 89 opcodes before it halts on environment APIs we do not emulate; the decoder hook recovers correct plaintext, confirming the string model. We recover the token names from the base64/XOR pool by keeping only exact matches (an exact ``\code{X-Bogus}'' decode cannot be coincidental): \code{X-Bogus} at pool index~686, \code{X-Gnarly} at~688, \code{msToken} at~685. Scanning the disassembly for instructions that load those indices maps each token to its producing functions---\code{X-Bogus} at \code{fn@70647} and neighbours, \code{X-Gnarly} at \code{fn@73223}, all assembled at \code{fn@61636}. This is our analog of the reference's \code{vm103}/\code{vm249} result; the offsets differ because the VM differs. The numeric constant pool names the primitives: an LCG increment, the golden-ratio constant \code{0x9E3779B9}, SHA-256 round constants, FNV offsets, and the \code{strData} envelope magic \code{538969122}; a bundled MD5 (\code{JS\_MD5\_NO\_NODE\_JS}) appears in the fingerprint surface. We did not produce a signature headless, so the exact composition is stated as referenced, not byte-confirmed.
+
+\textbf{Worked example: from bytecode bytes to \code{X-Bogus}.} To make the pipeline concrete, we trace one instruction end to end. In \code{fn@61636} (the header-assembly function), byte offset 62{,}053 holds
+\begin{lstlisting}
+01 20  02 ae  00 05  00 07  00 1b
+\end{lstlisting}
+The dispatcher reads the first two bytes as the opcode \code{0x0120 = 288} (an array-build handler) and then four 2-byte operands: \code{0x02ae = 686}, 5, 7, 27. Operand 686 is a string-pool index. Pool entry \code{A[686]} is the base64 string \code{"PVgnJSUPHg=="}; decoding it (base64, then XOR with the pooled key \code{A[5] = "eueJBzmo"}) yields exactly \code{"X-Bogus"}. So this instruction, in this function, places the \code{X-Bogus} header name into an array under construction---which is how we attribute the token to \code{fn@61636} without executing it. The same chain recovers \code{X-Gnarly} (\code{A[688]}) and \code{msToken} (\code{A[685]}). Every step here is reproduced by \code{tools/vm/disasm.js} and \code{tools/vm/strings.js}.
 
 Table~\ref{tab:replication} is the claim-by-claim replication (full detail in \code{analysis/tiktok/REPLICATION.md}). Of 12 claims, 5 reproduce directly, 5 reproduce in a different form attributable to the version change, 1 is a technique with no target in 1.16.6, and 1 (exact end-to-end composition) is unverified. No claim contradicted the reference outright; the divergences are all explained by the VM replacement.
 
@@ -297,6 +304,11 @@ Both are the subset read before each signer aborts (Section~\ref{sec:discussion}
 
 \section{Pass and Tool Catalogue}
 \code{tools/deobf/}: string-array pass and evaluating string-array pass (6 unit tests). \code{tools/vm/}: \code{decode.js}, \code{build\_opcode\_table.js}, \code{disasm.js}, \code{strings.js}, \code{pipeline.js} (3 tests). \code{tools/harness/}: \code{env.js} logging shim, \code{run\_tiktok.js}, \code{run\_xhs.js}. Token map in \code{data/tiktok\_token\_map\_1.16.6.json}; vectors status in \code{data/test\_vectors/xhs.json}.
+
+\section{Full Opcode Table}
+All 365 opcodes of the 1.16.6 VM, auto-generated from \code{data/tiktok\_opcodes\_1.16.6.json} by \code{paper/figures/make\_opcode\_table.py}. Columns per entry: opcode (\code{op}), heuristic category (\code{cat}: con/bit/mkf/cal/arr/sto/cmp/ari/lod/oth/ctl), and operand-read string (\code{rd}: \code{O}=1B, \code{p}=2B, \code{m}=3B; \code{--}=none).
+\onecolumn
+\input{opcode_table}
 
 \begin{thebibliography}{10}
 \bibitem{collberg1997taxonomy} C.~Collberg, C.~Thomborson, and D.~Low, ``A Taxonomy of Obfuscating Transformations,'' Univ.\ of Auckland, Tech.\ Rep.\ 148, 1997.
