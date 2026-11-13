@@ -23,6 +23,17 @@ Present: Google Firebase, Google Mobile Ads, AppsFlyer (attribution), the Facebo
 also present), ByteDance first-party SDKs, and Tencent SDK. **Namespace presence is a
 static HAS-CODE signal, not Exodus classification and not runtime confirmation.**
 
+## HAS-CODE (collection-API references in DEX) — static
+Beyond SDK namespaces, the DEX references device/identifier collection APIs (counts =
+number of DEX files mentioning the symbol; rows in
+[data/field_catalogue.csv](../../data/field_catalogue.csv)): advertising ID / GAID
+(`AdvertisingIdClient`, 9 dex), installed-app inventory (`getInstalledPackages`), last-
+known location, Wi-Fi MAC, contacts (`ContactsContract`), clipboard (`getPrimaryClip`,
+2 dex), carrier/SIM (`TelephonyManager`/`getSimOperator`, 5 dex), device sensors, and
+device serial. **A symbol reference is HAS-CODE: the collection API appears in code. It
+is not proof the code runs, nor that any value is sent (the OBSERVED tier).** A jadx
+trace of a few of these to their call sites is the M5 deliverable.
+
 ## OBSERVED (on the wire) — dynamic
 None yet. The dynamic capture phase (emulator + mitmproxy + Frida unpinning on own
 device) is deferred; see paper-#1 signing headers (`X-Bogus`, `X-Gnarly`) for the

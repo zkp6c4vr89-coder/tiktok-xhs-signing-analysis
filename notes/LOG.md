@@ -114,3 +114,20 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - Honest blockers flagged to owner: (1) I can't log in / drive apps — owner does interaction; (2) cert pinning likely blocks OBSERVED tier without Frida unpinning on the emulator; paper may lean CAN/HAS-CODE with OBSERVED where available.
 - Scaffolded: paper2/, analysis/{tiktok,xhs}/dataflow.md, data/apps.csv, data/field_catalogue.csv (field|level|destination|1p-or-sdk|encrypted|evidence), data/permissions_*.csv, data/trackers.csv. gitignore: *.apk/*.flows/samples/apks|captures|decompiled, mobsf_reports/.
 - NOT yet done: no APK downloaded, nothing installed, nothing captured.
+
+## 2026-11-13: paper #2 M4 static surface (CAN-COLLECT + HAS-CODE)
+
+- APKs supplied by owner (apkmirror .apkm bundles): TikTok com.zhiliaoapp.musically 47.7.3 (sha e9a63e6c), XHS com.xingin.xhs 9.53.0 (sha 26a5938b). Pinned data/apps.csv. .apkm/base.apk/dex all in samples/ (gitignored).
+- CAN-COLLECT (aapt2 dump permissions): TikTok 64 perms (12 sensitive incl FINE_LOCATION, MEDIA_LOCATION, CONTACTS, RECORD_AUDIO, CAMERA, BLUETOOTH_SCAN/ADVERTISE proximity). XHS 70 perms (15 sensitive incl CALENDAR r/w, GET/MANAGE_ACCOUNTS, location, contacts, camera, mic). -> data/permissions_*.csv + _full.txt.
+- HAS-CODE (DEX namespace scan, 15 TT / 21 XHS dex): Firebase, GMS Ads, AppsFlyer, Facebook SDK, Tencent in both; ByteDance (1p in TT, 3p in XHS); XHS also Alipay + AMap. 
+- HONESTY: disambiguated com/facebook/* -> FacebookSdk+login present (real SDK) vs Fresco/React-Native (NOT trackers; most of XHS facebook namespaces are RN). Labeled all tracker rows "HAS-CODE: namespace present, not Exodus-classified, not runtime-confirmed". exodus-core failed to install on py3.14 (noted; namespace scan used instead).
+- field_catalogue.csv: 20 rows (14 CAN-COLLECT, 6 HAS-CODE, 0 OBSERVED). Levels strictly separate columns.
+- jadx still installing (brew) for M5 field-to-code; MobSF (docker) pending.
+
+## 2026-11-13: paper #2 M5 (dex-level field-to-code, HAS-CODE)
+
+- brew jadx install stuck ~1hr -> TaskStop'd. Downloading jadx 1.5.6 release zip directly (resumable, background) for Java-level traces.
+- DEX collection-API scan (HAS-CODE): both apps reference AdvertisingIdClient(GAID), getInstalledPackages (app inventory), getLastKnownLocation, getMacAddress, ContactsContract, getPrimaryClip (clipboard), TelephonyManager/getSimOperator (carrier), SensorManager, getSerial, getRunningAppProcesses. XHS also Settings.Secure ANDROID_ID. 
+- NOTABLE: getPrimaryClip (clipboard read) XHS 8 dex vs TikTok 2. Flagged, HAS-CODE only.
+- field_catalogue.csv now 41 rows (14 CAN-COLLECT, 27 HAS-CODE, 0 OBSERVED). Every HAS-CODE row says "API referenced in N dex; not traced to a live call or network send."
+- dataflow.md updated for both. Deeper jadx call-site trace for a couple of fields = pending jadx.
