@@ -1,1 +1,15 @@
-app,tracker_name,category,detection_tool,evidence_path
+app,tracker_or_sdk,category,detection,confidence_note,evidence_path
+tiktok,Google Firebase,analytics/messaging,DEX namespace com/google/firebase,HAS-CODE: SDK classes present; not runtime-confirmed,samples/decompiled/tiktok/dex (apk pinned in data/apps.csv)
+tiktok,Google Mobile Ads,advertising,DEX namespace com/google/android/gms/ads,HAS-CODE: SDK classes present,samples/decompiled/tiktok/dex
+tiktok,AppsFlyer,attribution/analytics,DEX namespace com/appsflyer,HAS-CODE: attribution SDK present,samples/decompiled/tiktok/dex
+tiktok,Facebook SDK (Login/Core),social-login/analytics,DEX classes com/facebook/FacebookSdk + com/facebook/login,HAS-CODE: FB SDK present (distinct from Fresco image lib also present),samples/decompiled/tiktok/dex
+tiktok,ByteDance (first-party),first-party SDKs,DEX namespace com/bytedance,HAS-CODE: first-party (TikTok is a ByteDance app); not a third-party tracker,samples/decompiled/tiktok/dex
+tiktok,Tencent SDK,social/utility,DEX namespace com/tencent,HAS-CODE: present; specific module (share/login/analytics) not yet classified,samples/decompiled/tiktok/dex
+xhs,Google Firebase,analytics/messaging,DEX namespace com/google/firebase,HAS-CODE: SDK classes present,samples/decompiled/xhs/dex
+xhs,Google Mobile Ads,advertising,DEX namespace com/google/android/gms/ads,HAS-CODE: present,samples/decompiled/xhs/dex
+xhs,AppsFlyer,attribution/analytics,DEX namespace com/appsflyer,HAS-CODE: attribution SDK present,samples/decompiled/xhs/dex
+xhs,Facebook SDK (Login/Core),social-login,DEX classes com/facebook/FacebookSdk + com/facebook/login,HAS-CODE: FB SDK present; most com/facebook/* here is React Native (NOT a tracker),samples/decompiled/xhs/dex
+xhs,ByteDance SDK,third-party SDK,DEX namespace com/bytedance,HAS-CODE: present in a non-ByteDance app (third-party here),samples/decompiled/xhs/dex
+xhs,Tencent SDK,social/utility,DEX namespace com/tencent,HAS-CODE: present (likely WeChat share/login); module not classified,samples/decompiled/xhs/dex
+xhs,Alipay SDK,payment,DEX namespace com/alipay,HAS-CODE: payment SDK present,samples/decompiled/xhs/dex
+xhs,AMap (AutoNavi),maps/location,DEX namespace com/amap/api,HAS-CODE: Chinese maps/location SDK present,samples/decompiled/xhs/dex

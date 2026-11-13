@@ -1,1 +1,21 @@
 field,level,destination_host,first_party_or_sdk,encrypted,source_evidence_path,notes
+precise_location,CAN-COLLECT,(not observed),-,-,data/permissions_tiktok.csv,tiktok: ACCESS_FINE_LOCATION
+approximate_location,CAN-COLLECT,(not observed),-,-,data/permissions_tiktok.csv,tiktok: ACCESS_COARSE_LOCATION
+photo_geotags,CAN-COLLECT,(not observed),-,-,data/permissions_tiktok.csv,tiktok: ACCESS_MEDIA_LOCATION
+contacts,CAN-COLLECT,(not observed),-,-,data/permissions_tiktok.csv,tiktok: READ_CONTACTS
+microphone_audio,CAN-COLLECT,(not observed),-,-,data/permissions_tiktok.csv,tiktok: RECORD_AUDIO
+camera,CAN-COLLECT,(not observed),-,-,data/permissions_tiktok.csv,tiktok: CAMERA
+nearby_bluetooth,CAN-COLLECT,(not observed),-,-,data/permissions_tiktok.csv,tiktok: BLUETOOTH_SCAN/ADVERTISE (proximity)
+firebase_analytics_events,HAS-CODE,"app-measurement.com (SDK default, referenced)",Google Firebase SDK,https(referenced),data/trackers.csv,tiktok: HAS-CODE
+appsflyer_attribution,HAS-CODE,"appsflyer.com (SDK default, referenced)",AppsFlyer SDK,https(referenced),data/trackers.csv,tiktok: HAS-CODE
+facebook_sdk_events,HAS-CODE,"graph.facebook.com (SDK default, referenced)",Facebook SDK,https(referenced),data/trackers.csv,tiktok: HAS-CODE
+precise_location,CAN-COLLECT,(not observed),-,-,data/permissions_xhs.csv,xhs: ACCESS_FINE_LOCATION
+photo_geotags,CAN-COLLECT,(not observed),-,-,data/permissions_xhs.csv,xhs: ACCESS_MEDIA_LOCATION
+contacts,CAN-COLLECT,(not observed),-,-,data/permissions_xhs.csv,xhs: READ_CONTACTS
+calendar_events,CAN-COLLECT,(not observed),-,-,data/permissions_xhs.csv,xhs: READ_CALENDAR/WRITE_CALENDAR
+device_accounts,CAN-COLLECT,(not observed),-,-,data/permissions_xhs.csv,xhs: GET_ACCOUNTS/MANAGE_ACCOUNTS
+microphone_audio,CAN-COLLECT,(not observed),-,-,data/permissions_xhs.csv,xhs: RECORD_AUDIO
+camera,CAN-COLLECT,(not observed),-,-,data/permissions_xhs.csv,xhs: CAMERA
+firebase_analytics_events,HAS-CODE,"app-measurement.com (SDK default, referenced)",Google Firebase SDK,https(referenced),data/trackers.csv,xhs: HAS-CODE
+appsflyer_attribution,HAS-CODE,"appsflyer.com (SDK default, referenced)",AppsFlyer SDK,https(referenced),data/trackers.csv,xhs: HAS-CODE
+amap_location,HAS-CODE,"amap.com (SDK default, referenced)",AMap/AutoNavi SDK,https(referenced),data/trackers.csv,xhs: HAS-CODE

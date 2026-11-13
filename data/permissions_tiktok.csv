@@ -1,1 +1,13 @@
 permission,protection_level,can_collect_what,manifest_evidence_path
+android.permission.ACCESS_COARSE_LOCATION,dangerous/sensitive,"approximate location",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.ACCESS_FINE_LOCATION,dangerous/sensitive,"precise GPS location",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.ACCESS_MEDIA_LOCATION,dangerous/sensitive,"geotags embedded in photos",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.BLUETOOTH_ADVERTISE,dangerous/sensitive,"advertise to nearby devices",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.BLUETOOTH_CONNECT,dangerous/sensitive,"paired BT devices",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.BLUETOOTH_SCAN,dangerous/sensitive,"nearby BLE devices (proximity)",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.CAMERA,dangerous/sensitive,"camera image/video",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.READ_CONTACTS,dangerous/sensitive,"address book",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.READ_EXTERNAL_STORAGE,dangerous/sensitive,"files on shared storage",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.RECORD_AUDIO,dangerous/sensitive,"microphone audio",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.USE_BIOMETRIC,dangerous/sensitive,"biometric auth signal",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
+android.permission.WRITE_EXTERNAL_STORAGE,dangerous/sensitive,"write shared storage",aapt2 dump permissions samples/decompiled/tiktok/base.apk (apk pinned in data/apps.csv)
