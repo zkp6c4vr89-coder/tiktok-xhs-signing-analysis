@@ -131,3 +131,10 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - NOTABLE: getPrimaryClip (clipboard read) XHS 8 dex vs TikTok 2. Flagged, HAS-CODE only.
 - field_catalogue.csv now 41 rows (14 CAN-COLLECT, 27 HAS-CODE, 0 OBSERVED). Every HAS-CODE row says "API referenced in N dex; not traced to a live call or network send."
 - dataflow.md updated for both. Deeper jadx call-site trace for a couple of fields = pending jadx.
+
+## 2026-11-13: paper #2 background citations verified (web search)
+- Citizen Lab 2021 "TikTok vs Douyin: A Security and Privacy Analysis" (Pellaeon Lin, Mar 2021) — static Android source analysis. citizenlab.ca/2021/03/tiktok-vs-douyin-security-privacy-analysis/
+- Citizen Lab 2025 "Network Security Issues in RedNote" (Wang, Knockel, Poetranto, Feb 12 2025) — NETWORK-security only; explicitly did NOT assess first-party collection or govt access (brief caveat confirmed). Flaw = MobTech SDK TLS-no-cert-validation + plain-HTTP media. Rule 4: do not exploit against others.
+- EFF 2025 "Crimson Memo" (Feb 2025) — confirmed CL findings + privacy work. eff.org/deeplinks/2025/02/...
+- Saved to paper2/refs.bib with framing notes. All real; none invented.
+- jadx 1.5.6 still downloading (background) for deep M5 trace.
