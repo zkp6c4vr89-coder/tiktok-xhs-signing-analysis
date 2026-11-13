@@ -105,3 +105,12 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - Topics: reverse-engineering, javascript-deobfuscation, babel, virtual-machine, security-research.
 - Tagged v1.0, GitHub release created with paper.pdf attached.
 - DoD: public repo live; make reproduce works from pinned samples; paper builds (8pp); replication table complete (12 claims); xhs vectors+pass-rate published (N/A, honest); no signer/creds/personal-data/full-bundles in repo or history. ALL PASS.
+
+## 2026-11-13: Paper #2 (data-flow study) — M1 kickoff
+
+- New companion study: what TikTok/XHS apps collect & transmit, own-device + static, evidence-graded (CAN-COLLECT / HAS-CODE / OBSERVED kept strictly separate). Cites paper #1.
+- Decisions (owner): same repo under paper2/; account zkp6c4vr89-coder; STATIC-FIRST now, dynamic (emulator+mitmproxy+Frida) as phase 2; APKs from a mirror (pin SHA-256, note unofficial provenance).
+- Tooling: adb/emulator/aapt2 present in ~/Library/Android/sdk; java/python3/node/docker/brew/pip present. Need install: jadx, apktool, exodus-standalone, MobSF(docker), mitmproxy, frida.
+- Honest blockers flagged to owner: (1) I can't log in / drive apps — owner does interaction; (2) cert pinning likely blocks OBSERVED tier without Frida unpinning on the emulator; paper may lean CAN/HAS-CODE with OBSERVED where available.
+- Scaffolded: paper2/, analysis/{tiktok,xhs}/dataflow.md, data/apps.csv, data/field_catalogue.csv (field|level|destination|1p-or-sdk|encrypted|evidence), data/permissions_*.csv, data/trackers.csv. gitignore: *.apk/*.flows/samples/apks|captures|decompiled, mobsf_reports/.
+- NOT yet done: no APK downloaded, nothing installed, nothing captured.

@@ -33,3 +33,15 @@ paper/*.toc
 .DS_Store
 .vscode/
 .idea/
+
+# --- paper #2: never commit APKs, decompiled app source, or traffic captures ---
+*.apk
+*.apks
+*.xapk
+*.flows
+*.flow
+*.mitm
+samples/apks/
+samples/captures/
+samples/decompiled/
+mobsf_reports/
