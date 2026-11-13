@@ -97,3 +97,11 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - Added worked end-to-end trace to Section V: fn@61636 off 62053 bytes "01 20 02 ae 00 05..." -> op288 operand 0x02ae=686 -> A[686]="PVgnJSUPHg==" base64+XOR key A[5]="eueJBzmo" -> "X-Bogus". Fully reproducible via tools/vm.
 - Added full 365-opcode appendix: paper/figures/make_opcode_table.py -> paper/opcode_table.tex (longtable, 4-up, onecolumn). Wired `make figures`.
 - Paper now 8 pages, 0 undefined. Dropped the 10-14 page target per owner (short workshop-length is legitimate; no padding). Skipped expanded related-work and deep constant-pool analysis (latter risks upgrading "MD5 referenced" to "confirmed" — kept strict).
+
+## 2026-11-13: Part E, publish — PROJECT COMPLETE
+
+- Secret scan: gitleaks 8.30.1 over FULL history (13 commits) -> no leaks. History check: 0 samples/ or private/ files ever committed. No platform bundle tracked (only 16 tooling .js).
+- README finalized: v1.0 status, PDF link, Parts A/B/C results, disclaimer, reproduce (make reproduce exits 0), contact.
+- Topics: reverse-engineering, javascript-deobfuscation, babel, virtual-machine, security-research.
+- Tagged v1.0, GitHub release created with paper.pdf attached.
+- DoD: public repo live; make reproduce works from pinned samples; paper builds (8pp); replication table complete (12 claims); xhs vectors+pass-rate published (N/A, honest); no signer/creds/personal-data/full-bundles in repo or history. ALL PASS.
