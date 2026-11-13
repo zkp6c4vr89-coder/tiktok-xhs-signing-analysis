@@ -83,3 +83,11 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - Decision (with owner): dropped B6 x-s-common/x-rap-param (same env-check wall, runtime-capped). Skipped XHS 2-version diff (no 2nd bundle pinned) -> XHS drift noted QUALITATIVELY only; TikTok drift QUANTIFIED (1.12.2 vs 1.16.6). Stated honestly in C6.
 - Carried confidence markers up: MD5 referenced (not byte-confirmed), base64 confirmed, RC4/custom-alphabet NOT confirmed on 2026 bundle. No invented hours (effort reported relatively, by tooling needed).
 - Key shared finding: LCG increment 1013904223 (TT) / 1013904243 (XHS); both bind url+body+id+time; both blocked headless by env-integrity checks (the real wall, not obfuscation).
+
+## 2026-11-13: Part D, the paper
+
+- Verified 8 real citations via web search (Collberg TR148 1997, Skolka WWW2019, Rolles WOOT2009, Sharif S&P2009, Yadegari S&P2015, Eckersley PETS2010, Nikiforakis S&P2013, Laperdrix TWEB2020) + the reference repo. refs.bib + inline thebibliography. No invented refs.
+- paper/figures/make_figures.py (matplotlib) generates fig_opcode_categories.pdf + fig_coverage.pdf from data/. VM architecture + both pipelines as TikZ. Full 12-row replication claim table.
+- paper/main.tex: IEEEtran two-column, sections Abstract..Conclusion + appendices (bundles, opcode encoding, fingerprint surfaces, tool catalogue). Builds with latexmk -> main.pdf, 5 pages, 0 undefined refs/citations. Every number traces to repo (365/351/89.7%/pool indices etc.).
+- Hostile self-review -> notes/REVIEW.md (12 issues; fixed: primitive confidence markers, exact-vs-heuristic opcode count, single-bundle honesty, partial fingerprint labelling, relative effort; noted in Limitations: no signature produced, coverage 89.7%, strData unverified).
+- NOTE: paper is 5 dense IEEEtran pages, below the brief's 10-14 target. Chose not to pad (review item 10). Content is complete + evidence-backed. Can expand with more real detail if owner wants.
