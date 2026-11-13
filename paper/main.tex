@@ -26,7 +26,7 @@
 \maketitle
 
 \begin{abstract}
-Large web platforms attach cryptographic-looking signatures to API requests to tell real browsers from automated clients. We study the client-side signing code of two of them---TikTok (the \code{webmssdk} script that emits \code{X-Bogus} and \code{X-Gnarly}) and Xiaohongshu / RedNote (the \code{x-s} header)---as a reproducibility exercise. We independently replicate a prior community analysis of TikTok's bytecode virtual machine against a current bundle, and apply the same toolkit to Xiaohongshu. Our contribution is understanding and reusable tooling, not a means of access: no working signer is released. We find that the two platforms make opposite architectural choices. TikTok virtualizes its signer into a bespoke register machine---we recover \textbf{365} opcodes and \textbf{351} functions and disassemble \textbf{89.7\%} of a 98{,}961-byte bytecode image---whereas Xiaohongshu ships string-array- and control-flow-obfuscated JavaScript over two encrypted data blobs. We also document that TikTok \emph{replaced} its VM between the version a 2025 analysis examined (core 1.12.2) and the one we captured (1.16.6): stack machine to register machine, 77 to 365 opcodes. In both cases a runtime environment-integrity check, not the obfuscation, was the barrier to end-to-end extraction; we stopped at that boundary by design. Every number in this paper traces to a script, trace, or data file in the public repository.
+Large web platforms attach cryptographic-looking signatures to API requests to tell real browsers from automated clients. We study the client-side signing code of two of them, TikTok (the \code{webmssdk} script that emits \code{X-Bogus} and \code{X-Gnarly}) and Xiaohongshu / RedNote (the \code{x-s} header), as a reproducibility exercise. We independently replicate a prior community analysis of TikTok's bytecode virtual machine against a current bundle, and apply the same toolkit to Xiaohongshu. Our contribution is understanding and reusable tooling, not a means of access: no working signer is released. We find that the two platforms make opposite architectural choices. TikTok virtualizes its signer into a bespoke register machine (we recover \textbf{365} opcodes and \textbf{351} functions and disassemble \textbf{89.7\%} of a 98{,}961-byte bytecode image), whereas Xiaohongshu ships string-array- and control-flow-obfuscated JavaScript over two encrypted data blobs. We also document that TikTok \emph{replaced} its VM between the version a 2025 analysis examined (core 1.12.2) and the one we captured (1.16.6): stack machine to register machine, 77 to 365 opcodes. In both cases a runtime environment-integrity check, not the obfuscation, was the barrier to end-to-end extraction; we stopped at that boundary by design. Every number in this paper traces to a script, trace, or data file in the public repository.
 \end{abstract}
 
 \section{Introduction}
@@ -37,9 +37,9 @@ This paper treats two such systems as objects of a \emph{reproducibility} study.
 \noindent\textbf{Contributions.}
 \begin{itemize}
   \item An independent, reproducible replication of the TikTok \code{webmssdk} VM analysis against a current bundle, with a reusable bytecode decoder, opcode-table builder, and disassembler (Section~\ref{sec:tiktok}).
-  \item A finding that TikTok \emph{replaced} its protection VM between versions---stack to register machine, 77 to 365 opcodes, 272 to 351 functions---making a prior static analysis obsolete (Sections~\ref{sec:tiktok},~\ref{sec:compare}).
+  \item A finding that TikTok \emph{replaced} its protection VM between versions (stack to register machine, 77 to 365 opcodes, 272 to 351 functions), making a prior static analysis obsolete (Sections~\ref{sec:tiktok},~\ref{sec:compare}).
   \item The first (to our knowledge) write-up of the current Xiaohongshu \code{x-s} signer's structure: a \code{javascript-obfuscator} payload over two encrypted data blobs, with the input/output contract and a reusable evaluating deobfuscation pass (Section~\ref{sec:xhs}).
-  \item A comparative taxonomy of the two defensive strategies, and the observation that in both cases a runtime integrity check---not the code obfuscation---was the true analysis barrier (Section~\ref{sec:compare}).
+  \item A comparative taxonomy of the two defensive strategies, and the observation that in both cases a runtime integrity check, not the code obfuscation, was the true analysis barrier (Section~\ref{sec:compare}).
   \item A fully reproducible pipeline (\code{make reproduce}) and an explicit ethical boundary: we decline to defeat the integrity checks because that crosses into building a signer (Section~\ref{sec:ethics}).
 \end{itemize}
 
@@ -61,11 +61,11 @@ A consequence worth stating plainly: both signers abort when run outside a real 
 
 \section{Methodology}
 \label{sec:method}
-All analysis runs offline against pinned bundles. Each analysed file is recorded in \code{data/bundles.csv} with platform, filename, URL, SHA-256, and capture date, and \code{make verify-samples} checks every local sample against its hash. The offline pipeline---\code{make reproduce}---runs deobfuscation, disassembly, tracing, and figure generation from the pinned inputs.
+All analysis runs offline against pinned bundles. Each analysed file is recorded in \code{data/bundles.csv} with platform, filename, URL, SHA-256, and capture date, and \code{make verify-samples} checks every local sample against its hash. The offline pipeline (\code{make reproduce}) runs deobfuscation, disassembly, tracing, and figure generation from the pinned inputs.
 
 The toolkit is written to be reused across both platforms. \emph{Deobfuscation} (\code{tools/deobf/}) uses Babel to parse each bundle into an AST and apply passes: a classic string-array pass that resolves \code{ARR[n]} and decoder-call indirections to literals, and an evaluating pass that handles the \code{javascript-obfuscator} preset by running the array/rotation/decoder prelude in a sandboxed \code{node:vm} context and rewriting decoder calls with their decoded values. \emph{Virtual-machine analysis} (\code{tools/vm/}) comprises a bytecode loader, an opcode-table builder that extracts the handler array and classifies each handler's operand encoding on the AST, a linear and recursive-descent disassembler, and a string-pool decoder. \emph{Tracing} (\code{tools/harness/}) runs the signer in a \code{node:vm} context whose global is a logging-Proxy browser shim.
 
-The shim is the same for both platforms. Every property read on \code{window}, \code{navigator}, \code{document}, \code{screen}, and their descendants is recorded through nested \code{Proxy} objects, producing the fingerprint surface; all values are fixed synthetic stubs, and \code{Date} and \code{Math.random} are made deterministic, so a trace is reproducible and contains no personal data. We inject two hooks into the bundle source before running it: one on the VM's string decoder (to log every decoded string with its key) and one on the dispatch site (to count executed opcodes). Every quantitative claim below is produced by one of these tools and is regenerable with \code{make reproduce}.
+The shim is the same for both platforms. Every property read on \code{window}, \code{navigator}, \code{document}, \code{screen}, and their descendants is recorded through nested \code{Proxy} objects, producing the fingerprint surface. All values are fixed synthetic stubs, and \code{Date} and \code{Math.random} are made deterministic, so a trace is reproducible and contains no personal data. We inject two hooks into the bundle source before running it: one on the VM's string decoder (to log every decoded string with its key) and one on the dispatch site (to count executed opcodes). Every quantitative claim below is produced by one of these tools and is regenerable with \code{make reproduce}.
 
 \section{Case Study 1: TikTok}
 \label{sec:tiktok}
@@ -81,9 +81,9 @@ while (u.I < g.length && C(u,4) === w) {
 }
 return C(u,4);                    // write reg 4 = return
 \end{lstlisting}
-Each handler reads its operands with three readers---\code{O} (1 byte), \code{p} (2 bytes), \code{m} (3 bytes)---and accesses registers through getters/setters (\code{C}/\code{L} get, \code{Q}/\code{I} set). A function returns by writing register~4, which ends the loop. Table~\ref{tab:vm} summarises these elements.
+Each handler reads its operands with three readers (\code{O} for 1 byte, \code{p} for 2 bytes, \code{m} for 3 bytes) and accesses registers through getters/setters (\code{C}/\code{L} get, \code{Q}/\code{I} set). A function returns by writing register~4, which ends the loop. Table~\ref{tab:vm} summarises these elements.
 
-Bytecode is delivered as base64 then raw DEFLATE---the decompression the reference had hard-coded around---yielding a 98{,}961-byte image. We implement the loader (\code{tools/vm/decode.js}), extract the handler table (\textbf{365} opcodes; Fig.~\ref{fig:opcats}), classify each handler's operand encoding on the AST, and build a recursive-descent disassembler. Function entries come from 206 constant \code{S(\ldots)} offsets plus operand-driven children; following them reaches \textbf{351} functions, \textbf{245} of which return cleanly, covering \textbf{89.7\%} of the image (Fig.~\ref{fig:coverage}). The entry function disassembles as, e.g.:
+Bytecode is delivered as base64 then raw DEFLATE, the decompression the reference had hard-coded around, yielding a 98{,}961-byte image. We implement the loader (\code{tools/vm/decode.js}), extract the handler table (\textbf{365} opcodes; Fig.~\ref{fig:opcats}), classify each handler's operand encoding on the AST, and build a recursive-descent disassembler. Function entries come from 206 constant \code{S(\ldots)} offsets plus operand-driven children; following them reaches \textbf{351} functions, \textbf{245} of which return cleanly, covering \textbf{89.7\%} of the image (Fig.~\ref{fig:coverage}). The entry function disassembles as, e.g.:
 \begin{lstlisting}
   0  op218 store        [0, 14, 8]
   7  op175 make-function [52,46,9,10,24,54]
@@ -161,7 +161,8 @@ Table~\ref{tab:replication} is the claim-by-claim replication (full detail in \c
 \caption{TikTok claim-by-claim replication. R~=~reproduced; R$^\ast$~=~reproduced in a different form (version drift); T~=~technique only; U~=~unverified.}
 \label{tab:replication}
 \centering\footnotesize
-\begin{tabular}{@{}p{0.70\columnwidth}c@{}}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}p{0.62\columnwidth}l@{}}
 \toprule
 Reference claim & Verdict \\
 \midrule
@@ -178,7 +179,7 @@ MD5 in the pipeline & R (MD5 lib flag) \\
 Mixing with \code{0x9E3779B9} & R (pool constant) \\
 Exact X-Bogus byte composition & U \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \section{Case Study 2: Xiaohongshu}
@@ -234,6 +235,7 @@ Table~\ref{tab:taxonomy} is the technique taxonomy. The headline is a choice of 
 \caption{Obfuscation technique taxonomy. ``conf.''~=~confirmed by our tooling; ``ref.''~=~referenced in code/constants but not byte-confirmed.}
 \label{tab:taxonomy}
 \centering\footnotesize
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}lll@{}}
 \toprule
  & TikTok 1.16.6 & Xiaohongshu 2026 \\
@@ -246,7 +248,7 @@ Hash primitives & MD5/SHA-256 (ref.) & MD5 (ref.), base64 (conf.) \\
 Randomness & LCG, \code{0x9E3779B9} (conf.) & LCG const (conf.) \\
 Anti-tamper & env init gate (conf.) & integrity check (conf.) \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \textbf{Version drift.} For TikTok this is quantified: between core 1.12.2 and 1.16.6 the VM was replaced wholesale (stack~$\to$~register, 77~$\to$~365 opcodes, 272~$\to$~351 functions, JS string array~$\to$~in-VM pool, hard-coded bytes~$\to$~base64+DEFLATE). For Xiaohongshu we pinned a single bundle and make no cadence claim; we note only the rebrand and a modern obfuscator toolchain.
@@ -298,9 +300,20 @@ op & category & reads & operand B & terminal \\
 \section{Fingerprint Surfaces}
 Both are the subset read before each signer aborts (Section~\ref{sec:discussion}).
 
-\noindent\textbf{TikTok} (\code{data/tiktok\_fingerprint\_surface.json}): \code{navigator}, \code{navigator.connection}, \code{document.readyState}, \code{document.addEventListener}, the Slardar telemetry registry, and a bundled MD5 flag (\code{JS\_MD5\_NO\_NODE\_JS}).
+\noindent\textbf{TikTok} (\code{data/tiktok\_fingerprint\_surface.json}):
+\begin{itemize}\footnotesize\setlength\itemsep{0pt}
+  \item \code{navigator}, \code{navigator.connection}
+  \item \code{document.readyState}, \code{document.addEventListener}
+  \item the Slardar telemetry registry
+  \item a bundled MD5 flag (\code{JS\_MD5\_NO\_NODE\_JS})
+\end{itemize}
 
-\noindent\textbf{Xiaohongshu} (\code{data/xhs\_fingerprint\_surface.json}): \code{document.cookie}, \code{document.documentElement.getAttribute}, \code{document.addEventListener}.
+\noindent\textbf{Xiaohongshu} (\code{data/xhs\_fingerprint\_surface.json}):
+\begin{itemize}\footnotesize\setlength\itemsep{0pt}
+  \item \code{document.cookie}
+  \item \code{document.documentElement\allowbreak.getAttribute}
+  \item \code{document.addEventListener}
+\end{itemize}
 
 \section{Pass and Tool Catalogue}
 \code{tools/deobf/}: string-array pass and evaluating string-array pass (6 unit tests). \code{tools/vm/}: \code{decode.js}, \code{build\_opcode\_table.js}, \code{disasm.js}, \code{strings.js}, \code{pipeline.js} (3 tests). \code{tools/harness/}: \code{env.js} logging shim, \code{run\_tiktok.js}, \code{run\_xhs.js}. Token map in \code{data/tiktok\_token\_map\_1.16.6.json}; vectors status in \code{data/test\_vectors/xhs.json}.
