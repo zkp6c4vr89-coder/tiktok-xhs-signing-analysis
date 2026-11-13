@@ -1,6 +1,6 @@
 # Client-side request signing on TikTok and Xiaohongshu web: a reproducible study
 
-> **Status:** work in progress (phase A0, repository scaffold). The results below are not filled in yet.
+> **Status:** v1.0. Paper: [paper/main.pdf](paper/main.pdf) (8 pages). Secret-scanned over full history (gitleaks, clean); no bundles, signer, credentials, or personal data in the repo or its history.
 
 This repository studies the client-side request-signing code that two social platforms ship to web browsers:
 
@@ -36,12 +36,16 @@ What this project contributes is an understanding of how these systems work, plu
 ## Reproducing
 
 ```sh
-# 1. Put the pinned bundles listed in data/bundles.csv into samples/ (they are not distributed here).
-# 2. Run the offline pipeline: deobfuscate -> disassemble -> trace -> figures.
-make reproduce
+# 1. Put the pinned bundles listed in data/bundles.csv into samples/ (not distributed here).
+#    For TikTok the pipeline also expects a beautified copy + decoded bytecode, which
+#    `make disasm` regenerates from the raw bundle.
+# 2. Run the offline pipeline: verify -> deobfuscate -> disassemble -> trace -> xhs -> figures.
+make reproduce      # full offline pipeline from samples/
+make test           # unit tests (9: deobf + vm)
+make -C paper       # or: cd paper && latexmk -pdf main.tex   (builds the PDF)
 ```
 
-`make verify-samples` checks the SHA-256 of each file in `samples/` against `data/bundles.csv`.
+`make verify-samples` checks the SHA-256 of each file in `samples/` against `data/bundles.csv`. Individual stages: `make deobf`, `make disasm`, `make trace`, `make xhs`, `make figures`.
 
 ## Results
 
@@ -63,7 +67,15 @@ Claim-by-claim table: [analysis/tiktok/REPLICATION.md](analysis/tiktok/REPLICATI
 (5 reproduced, 5 reproduced-different by version drift, 1 technique-only, 1 unverified).
 Reproduce with `make verify-samples && make deobf && make disasm && make trace`.
 
-### Parts B, C — to be filled in at checkpoints B5 and C.
+### Part B — Xiaohongshu / RedNote `x-s` (complete)
+
+The signer is reached via `window.sign(url, body)` → `{x-s, x-t, x-s-common}` (inputs: URL, body, `a1` cookie, timestamp). Unlike TikTok's bytecode VM, it is a **`javascript-obfuscator` payload** (string array + control-flow flattening) over two **encrypted data blobs** — recovered with a reusable evaluating deobfuscation pass (297 decoder calls resolved). Details: [analysis/xhs/](analysis/xhs/).
+
+**No valid `x-s` test vectors were produced.** The signer aborts headless on an environment-integrity check; defeating it would cross into building a working signer, which this project does not do. See [data/test_vectors/xhs.json](data/test_vectors/xhs.json).
+
+### Part C — comparison (complete)
+
+TikTok **virtualizes** (bespoke 365-opcode register VM); Xiaohongshu **obfuscates** ordinary JS over encrypted blobs. Both bind URL + body + a persistent id + timestamp, share a Numerical-Recipes LCG constant, and — the key finding — are blocked from headless signing by a **runtime environment-integrity check, not by the obfuscation**. Full analysis: [analysis/COMPARISON.md](analysis/COMPARISON.md).
 
 ## Licence
 
