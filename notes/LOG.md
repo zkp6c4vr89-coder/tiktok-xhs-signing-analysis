@@ -138,3 +138,11 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - EFF 2025 "Crimson Memo" (Feb 2025) — confirmed CL findings + privacy work. eff.org/deeplinks/2025/02/...
 - Saved to paper2/refs.bib with framing notes. All real; none invented.
 - jadx 1.5.6 still downloading (background) for deep M5 trace.
+
+## 2026-11-13: paper #2 tooling/connection notes
+- CONNECTION is slow/flaky: curl cannot complete large files (jadx 72MB stalled at 47% across 3 attempts, server refused resume -> ABANDONED). 
+- sdkmanager DOES work (android-34 platform downloaded fully; system image ~1.5GB in progress via sdkmanager's own resumption). Dynamic/emulator path still viable.
+- mitmproxy 12.3.1 READY (venv). frida-tools installing. Capture kit written to private/capture/ (gitignored): install_apks.sh, frida_unpin.js, README runbook.
+- M3 redactor tools/dataflow/extract_fields.py + redaction test committed (no raw values; shapes only).
+- M5 deep (jadx-level) trace deferred: will use androguard/smali locally or document at HAS-CODE API-reference level (already solid). Not blocking.
+- Waiting on: system image download (gating for capture), then AVD+cert+apps setup, then OWNER drives throwaway-account sessions.
