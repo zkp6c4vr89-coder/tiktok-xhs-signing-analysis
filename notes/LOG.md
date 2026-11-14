@@ -161,3 +161,10 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - BUT attach-by-PID hooks SSL_read/write across ~10 libs INCLUDING XHS's own: libred{player,download,preload,ffmpeg}.so, libheif, libmodelprofile, libopensource, libjavacrypto, libssl. So media/download/preload + SDK + system TLS ARE capturable; only libcronet's internal API is missed.
 - Session wrapper private/capture/run_session.sh <tiktok|xhs> [sec]: launches app, waits, attaches SSL capture while owner interacts. Capture scripts stay in private/ (gitignored); redactor tools/dataflow/ committed.
 - HAND-OFF: owner drives throwaway-account session; assistant redacts frames -> OBSERVED catalogue rows. XHS confirmed running fine under frida (no anti-tamper crash; sits at OverseasLoginActivity).
+
+## 2026-11-14: paper #2 OBSERVED — logged-in XHS session captured + redacted
+- Owner logged into throwaway XHS account; captured 490 SSL frames over ~75s of browsing.
+- Hosts: edith.rnote.com (first-party API), appsflyersdk.com, firebaselogging.googleapis.com, + lots of media (red* libs).
+- FIRST-PARTY FINDING: edith.rnote.com requests captured, but (a) the signed feed/API body is OPAQUE (gzip/encrypted) and (b) the main signed calls go via libcronet.114.so (0 SSL exports) and did NOT appear — only /speedtest + an opaque-body call leaked via hookable libs. So first-party PAYLOAD fields remain unobserved (cronet + signing). Consistent with paper #1.
+- REDACTOR hardening (important): fixed redact_ssl_frames.py to (1) only parse frames whose first line is a valid HTTP request line, (2) validate header/body field NAMES as ASCII tokens, (3) record non-printable/gzip bodies as a single <binary/compressed> opaque field (never parse binary byte-by-byte). Prevents binary fragments of own data leaking as "field names."
+- OBSERVED catalogue now 13 rows (Facebook SDK 6 fields; AppsFlyer app_id/buildnumber + opaque; Firebase format + opaque; edith first-party opaque body). Totals: 14 CAN-COLLECT / 27 HAS-CODE / 13 OBSERVED. No raw values; raw frames gitignored.

@@ -22,7 +22,7 @@ SIG_HEADERS = {"x-bogus", "x-gnarly", "x-argus", "x-gorgon", "x-ladon", "x-khron
 
 # First-party host hints vs third-party SDK endpoints.
 FIRST_PARTY = {"tiktok": re.compile(r"(tiktok|byteoversea|tiktokv|ttwstatic|musical)", re.I),
-               "xhs": re.compile(r"(xiaohongshu|xhscdn|rednote|xhs)", re.I)}
+               "xhs": re.compile(r"(xiaohongshu|xhscdn|rednote|rnote|edith|xhs)", re.I)}
 SDK_HOSTS = {
     "app-measurement.com": "Google Firebase", "google-analytics.com": "Google Analytics",
     "appsflyer.com": "AppsFlyer", "graph.facebook.com": "Facebook", "crashlytics": "Firebase Crashlytics",
