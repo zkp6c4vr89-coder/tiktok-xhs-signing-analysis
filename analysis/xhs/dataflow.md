@@ -98,3 +98,22 @@ defeating these anti-tamper layers, which this project does not do (reading own 
 scope; disabling a hardened app's integrity/anti-tamper protections is out of scope and,
 here, beyond what native-only instrumentation can reach). **Platform-side scraping is
 explicitly excluded** by the project's own rules (no automated/bulk requests; not a scraper).
+
+## Cronet crack — methods attempted and why each failed (native-capability exhausted)
+To reach the first-party feed/search/lives plaintext, every own-device method available
+was tried on the rooted emulator:
+| Method | Result |
+|---|---|
+| HTTP proxy (mitmproxy) | Cronet ignores the system proxy; 0 first-party flows |
+| Native `SSL_read`/`SSL_write` by symbol (`libssl`, `libred*`) | Works, but only catches non-Cronet TLS (SDK, media CDN, `/speedtest`) |
+| Native symbol hook of `libcronet` BoringSSL | `libcronet.114.0.5735.38.so` fully stripped: 0 `SSL_*` symbols |
+| Cronet **C-API** hook (`Cronet_UrlRequest_InitWithParams`, `OnReadCompleted`) | Installs, never fires — XHS uses Cronet's **Java/JNI** API, not the C API |
+| Frida **Java** hooks (cronet request builder, analytics logger) | `Java.available` never true (`JAVA_NEVER`) — ART anti-tamper blocks the bridge while native hooks work |
+| `getaddrinfo`/socket probe | Confirms network happens (e.g. `live-source-play.xhscdn.com` for a live stream) but yields no plaintext |
+
+Remaining theoretical paths (BoringSSL byte-pattern scan of the stripped 6.4 MB lib;
+`RegisterNatives` JNI-table hooking, which needs spawn-time instrumentation that
+anti-tamper blocks) are deep, fragile, and cross into defeating the app's protections —
+out of scope. **Conclusion: XHS's first-party payloads are, by deliberate multi-layer
+hardening, not observable with own-device instrumentation.** This resistance is a
+finding. Platform-side bulk collection remains excluded by the project rules.
