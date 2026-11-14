@@ -78,3 +78,23 @@ Pulled XHS's own app-data dir on the rooted emulator and read **schema/key names
 This is evidence of **local retention** (behavioural history + tracking identifiers), a
 distinct tier from network transmission. It does not by itself prove upload (that is the
 OBSERVED tier); the analytics tables are explicitly upload *queues*, which implies intent.
+
+## Anti-analysis hardening (why deeper OBSERVED is blocked) — a finding
+XHS actively resists own-device dynamic analysis on multiple layers, established by
+direct test on the rooted emulator:
+1. **Native TLS via Cronet** (`libcronet.114.0.5735.38.so`): first-party feed/search/live
+   API goes through Chromium Cronet, which ignores the HTTP proxy and pins at a
+   statically-linked, **fully stripped** BoringSSL (0 `SSL_*` symbols) — not hookable by name.
+2. **Frida Java bridge blocked**: `Java.available` never becomes true in the XHS process
+   (`JAVA_NEVER after 61` polls) although **native `Interceptor` hooks work** (SSL_read/
+   write on `libssl`/`libred*` succeed). So Java-layer hooks (cronet request builder,
+   analytics event logger) cannot be installed — anti-tamper defeats ART instrumentation.
+3. **Fast queue flush**: local analytics queues (`analysisemitter`, `json_tracker.apm`)
+   empty quickly after upload, so at-rest mining catches few events.
+
+Net effect: own-device OBSERVED is limited to non-Cronet TLS (SDK traffic, media CDN,
+`/speedtest`) plus the STORED-ON-DEVICE tier. Reaching the Cronet feed API would require
+defeating these anti-tamper layers, which this project does not do (reading own data is in
+scope; disabling a hardened app's integrity/anti-tamper protections is out of scope and,
+here, beyond what native-only instrumentation can reach). **Platform-side scraping is
+explicitly excluded** by the project's own rules (no automated/bulk requests; not a scraper).
