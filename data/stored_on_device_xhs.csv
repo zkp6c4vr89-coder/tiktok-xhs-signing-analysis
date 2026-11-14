@@ -1,0 +1,9 @@
+artifact,type,what_it_reveals,evidence
+noteReadRecord(user_id;note_id;note_title;stay_seconds;like_baseline;timestamp),sqlite table,per-note reading history incl. dwell time (stay_seconds),samples/captures/dbs/NoteReadRecordDB .schema (own-device; redacted)
+historyRecord(user_id;note_id;note_title;note_desc;user_name;author_id;timestamp),sqlite table,full view history incl. author identity,samples/captures/dbs/PlayHistoryRecordDB .schema
+tracker_fresh/tracker_hybrid/tracker_custom(trackContent BLOB;trackEventId;bean_key),sqlite tables,queued analytics events awaiting upload,samples/captures/dbs/analysisemitter.sqlite .schema
+apm(biz_name;event_name;event_id;data;zone DEFAULT 'CN'),sqlite table,APM/analytics event queue; zone defaults to 'CN',samples/captures/dbs/json_tracker .schema
+messages(type;entry BLOB),sqlite table,Firebase Analytics local event queue,samples/captures/dbs/google_app_measurement_local.db .schema
+com.facebook.sdk.appEventPreferences:anonymousAppDeviceGUID,shared_pref key,persistent Facebook anonymous device GUID,shared_prefs (own-device; key name only)
+com.google.android.gms.measurement.prefs:app_instance_id;first_open_time;session_id;gmp_app_id,shared_pref keys,Firebase Analytics identifiers/state,shared_prefs
+appsflyer-data:AF_INSTALLATION;attributionId;appsFlyerFirstInstall;afUninstallToken_queued,shared_pref keys,AppsFlyer install/attribution tracking state,shared_prefs

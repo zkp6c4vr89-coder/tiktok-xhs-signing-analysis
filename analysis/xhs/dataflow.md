@@ -61,3 +61,20 @@ This upgrades the Facebook/AppsFlyer rows from HAS-CODE to **OBSERVED** for XHS.
 - [ ] M4 MobSF report (pending)
 - [ ] M5 field-to-code traces (pending jadx)
 - [ ] M2/M3 own-device capture + field extraction (deferred)
+
+## STORED-ON-DEVICE (local persistence) — static read of own-device app data
+Pulled XHS's own app-data dir on the rooted emulator and read **schema/key names only**
+(never row values; the pulled DBs stay git-ignored). Data XHS persists locally
+([data/stored_on_device_xhs.csv](../../data/stored_on_device_xhs.csv)):
+- **`NoteReadRecordDB.noteReadRecord`** — per-note reading history with **dwell time**
+  (`stay_seconds`), note_id, note_title, timestamp.
+- **`PlayHistoryRecordDB.historyRecord`** — full view history incl. `author_id`, `user_name`.
+- **`analysisemitter.sqlite`** / **`json_tracker.apm`** — queued analytics events; `apm.zone`
+  defaults to **`'CN'`**.
+- **`google_app_measurement_local.db`** — Firebase Analytics local event queue.
+- shared_prefs persistent identifiers: Facebook **`anonymousAppDeviceGUID`**, Firebase
+  `app_instance_id`/`first_open_time`/`session_id`, AppsFlyer `AF_INSTALLATION`/`attributionId`.
+
+This is evidence of **local retention** (behavioural history + tracking identifiers), a
+distinct tier from network transmission. It does not by itself prove upload (that is the
+OBSERVED tier); the analytics tables are explicitly upload *queues*, which implies intent.
