@@ -146,3 +146,11 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - M3 redactor tools/dataflow/extract_fields.py + redaction test committed (no raw values; shapes only).
 - M5 deep (jadx-level) trace deferred: will use androguard/smali locally or document at HAS-CODE API-reference level (already solid). Not blocking.
 - Waiting on: system image download (gating for capture), then AVD+cert+apps setup, then OWNER drives throwaway-account sessions.
+
+## 2026-11-14: paper #2 M2/M3 OBSERVED tier — breakthrough via Frida SSL hooking
+- Dynamic pipeline fully stood up: rooted android-34 emulator, mitmproxy CA in system store (interception of non-pinned traffic verified on Google hosts), frida-server 17.26.2, both apps installed.
+- WALLS confirmed: XHS first-party uses Cronet/ttnet (16 dex) -> (a) pins at native BoringSSL, (b) IGNORES the HTTP proxy (zero xhs hosts reached proxy; only Google/GMS did). So proxy-mode capture can't see first-party.
+- PIVOT (brief M6): Frida-hook BoringSSL SSL_read/SSL_write in-process to read OWN plaintext. private/capture/ssl_capture.js + ssl_dump.py. Hooked libssl.so/libjavacrypto.so -> captured 26 real frames on XHS first-launch (no login).
+- OBSERVED DATA (real): XHS -> graph.facebook.com (Facebook SDK: access_token/fields/format/platform/sdk/sdk_version) + appsflyersdk.com (AppsFlyer: app_id/buildnumber + /androidevent POST). 
+- Redactor tools/dataflow/redact_ssl_frames.py: frames -> field metadata (shapes only, NO raw values). 8 OBSERVED rows -> data/observed_fields_xhs.csv, folded into field_catalogue.csv (now 14 CAN-COLLECT / 27 HAS-CODE / 8 OBSERVED). Verified: no apk/har/flows/raw/private tracked; raw frames gitignored.
+- REMAINING for first-party OBSERVED: hook cronet's bundled BoringSSL (SSL_* not exported by name on system libssl path), drive a logged-in session (user), handle XHS anti-tamper under Frida (spawns started timing out -> likely frida detection or emulator flakiness). TikTok (same ByteDance stack) likely harder.

@@ -33,8 +33,28 @@ reference is HAS-CODE only: the API appears in code, which is not proof it runs 
 any value is sent (the OBSERVED tier).** jadx call-site traces are the M5 deliverable.
 
 ## OBSERVED (on the wire) — dynamic
-None yet. Deferred to the dynamic phase. The `x-s` signing layer is characterised in
-paper #1.
+Captured on an own-device rooted emulator (android-34) by Frida-hooking BoringSSL
+`SSL_read`/`SSL_write` in the app process (reading our own plaintext at the TLS boundary;
+brief M6 — not a MITM, no forging). Raw frames stay git-ignored
+(`samples/captures/ssl_frames.jsonl`); only redacted field metadata is published
+([data/observed_fields_xhs.csv](../../data/observed_fields_xhs.csv), folded into the
+master catalogue as OBSERVED rows).
+
+**First-launch, no login** already sends to third-party SDKs over TLS:
+- **graph.facebook.com** (Facebook SDK): `access_token`, `fields`, `format`, `platform`,
+  `sdk`, `sdk_version` — shapes only, values redacted.
+- **appsflyersdk.com** (AppsFlyer): `app_id`, `buildnumber`, plus an event POST
+  (`/api/v6.18/androidevent`).
+
+This upgrades the Facebook/AppsFlyer rows from HAS-CODE to **OBSERVED** for XHS.
+
+**Method notes / limits (honest):**
+- Capture uses the system `libssl.so`. XHS's **first-party API uses Cronet/ttnet with its
+  own bundled BoringSSL** and **ignores the HTTP proxy**; those `SSL_*` symbols were not
+  hooked by name, so first-party `edith.xiaohongshu.com` traffic is **not yet OBSERVED**
+  here. Hooking cronet's BoringSSL and driving a logged-in session (scroll/search/post)
+  is the remaining step; the app also shows anti-tamper behaviour under Frida.
+- The `x-s` signing layer itself is characterised in paper #1.
 
 ## Status
 - [x] M4 static surface (permissions + tracker namespaces)
