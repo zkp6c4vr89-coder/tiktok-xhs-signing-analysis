@@ -154,3 +154,10 @@ Dated entries: commands run, hypotheses, results, and dead ends. Times are local
 - OBSERVED DATA (real): XHS -> graph.facebook.com (Facebook SDK: access_token/fields/format/platform/sdk/sdk_version) + appsflyersdk.com (AppsFlyer: app_id/buildnumber + /androidevent POST). 
 - Redactor tools/dataflow/redact_ssl_frames.py: frames -> field metadata (shapes only, NO raw values). 8 OBSERVED rows -> data/observed_fields_xhs.csv, folded into field_catalogue.csv (now 14 CAN-COLLECT / 27 HAS-CODE / 8 OBSERVED). Verified: no apk/har/flows/raw/private tracked; raw frames gitignored.
 - REMAINING for first-party OBSERVED: hook cronet's bundled BoringSSL (SSL_* not exported by name on system libssl path), drive a logged-in session (user), handle XHS anti-tamper under Frida (spawns started timing out -> likely frida detection or emulator flakiness). TikTok (same ByteDance stack) likely harder.
+
+## 2026-11-14: paper #2 — first-party capture surface improved; ready for driven session
+- Root cause of attach fail: frida lists main process by app label, not package. Fixed ssl_attach.py to resolve pkg->PID via `pidof` and attach by PID.
+- Module enumeration of live XHS (pid): libcronet.114.0.5735.38.so loaded but 0 SSL exports (Chromium cronet statically links+strips BoringSSL -> not symbol-hookable; pure-cronet API traffic remains uncaptured without pattern/Java-layer hooking).
+- BUT attach-by-PID hooks SSL_read/write across ~10 libs INCLUDING XHS's own: libred{player,download,preload,ffmpeg}.so, libheif, libmodelprofile, libopensource, libjavacrypto, libssl. So media/download/preload + SDK + system TLS ARE capturable; only libcronet's internal API is missed.
+- Session wrapper private/capture/run_session.sh <tiktok|xhs> [sec]: launches app, waits, attaches SSL capture while owner interacts. Capture scripts stay in private/ (gitignored); redactor tools/dataflow/ committed.
+- HAND-OFF: owner drives throwaway-account session; assistant redacts frames -> OBSERVED catalogue rows. XHS confirmed running fine under frida (no anti-tamper crash; sits at OverseasLoginActivity).
