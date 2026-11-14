@@ -84,3 +84,16 @@ Code is under the MIT licence ([LICENSE](LICENSE)). The paper and its figures ar
 ## Contact
 
 Sreenandhu Nair, GitHub [@zkp6c4vr89-coder](https://github.com/zkp6c4vr89-coder). Please open an issue for questions or corrections.
+
+---
+
+## Companion study (paper #2): what the apps collect
+
+A second, companion study examines **what data the TikTok and Xiaohongshu Android apps collect and transmit**, observed from an own-device throwaway account and matched back to the decompiled apps. It cross-references paper #1's request-signing findings.
+
+- **Paper:** [paper2/main.pdf](paper2/main.pdf)
+- **Evidence is graded at four strictly separated levels** and never conflated: `CAN-COLLECT` (permission), `HAS-CODE` (collection code path), `OBSERVED` (seen on the wire, own-device), `STORED-ON-DEVICE` (persisted locally). The centrepiece is [data/field_catalogue.csv](data/field_catalogue.csv).
+- **Key findings:** both apps integrate the major advertising/analytics SDKs (Facebook, AppsFlyer, Firebase), observed receiving data from Xiaohongshu; Xiaohongshu persists locally a per-note **reading history with dwell time** and analytics queues defaulting to a `CN` zone; and its first-party API is placed **beyond own-device observation** by a five-layer hardening (Cronet native pinning + stripped BoringSSL + Java-bridge anti-tamper).
+- **Data:** [analysis/tiktok/dataflow.md](analysis/tiktok/dataflow.md), [analysis/xhs/dataflow.md](analysis/xhs/dataflow.md), permission/tracker tables and `data/stored_on_device_xhs.csv`.
+
+**Scope and non-goals (same spine as paper #1).** Own-device only; no automated or bulk requests to either platform; **not a scraper**. No raw personal values are published (field names, shapes, hosts, and encrypted status only); APKs and raw captures are git-ignored. We do not attack anyone else's device, do not use the MobTech certificate flaw, and do not defeat integrity/anti-tamper protections to forge requests or force first-party observation. Findings are pinned to specific app builds and may drift.

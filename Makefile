@@ -32,6 +32,7 @@ trace:
 figures:
 	python3 paper/figures/make_figures.py
 	python3 paper/figures/make_opcode_table.py
+	python3 paper2/figures/make_figures.py
 
 paper:
 	cd paper && latexmk -pdf main.tex
